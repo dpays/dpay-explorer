@@ -235,7 +235,7 @@ def save_witness_vote(op, block, blockid):
 
 def update_comment(author, permlink):
     _id = author + '/' + permlink
-    if(_id == "xeroc/re-piston-20160818t080811"):
+    if(_id == "jared/dpaypy"):
       return
     comment = rpc.get_content(author, permlink).copy()
     comment.update({
