@@ -62,7 +62,7 @@
       <form>
         <p>
           Subscribe to account
-          <input id="account" type="text" size="50" maxlength="50" value="@jesta">
+          <input id="account" type="text" size="50" maxlength="50" value="@jrice">
         </p>
       </form>
       <button onclick='broadcast();'>Subscribe</button>

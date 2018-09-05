@@ -44,7 +44,7 @@
       <th class="right aligned">Date</th>
       <th class="right aligned">Count</th>
       <th class="right aligned">VESTS Gained</th>
-      <th>Estimated SP</th>
+      <th>Estimated BP</th>
       <th class="right aligned">Acct % Increase</th>
     </tr>
   </thead>
@@ -66,7 +66,7 @@
             </div>
           </td>
           <td>
-            ~<?php echo $this->convert::vest2sp($reward->reward, ""); ?> SP*
+            ~<?php echo $this->convert::vest2bp($reward->reward, ""); ?> BP*
           </td>
           <td class="right aligned">
             <span style="color: #ccc">

@@ -15,13 +15,13 @@
             <i class="dropdown icon"></i>
             <div class="menu">
               <a class="{{ filter == 'vest' ? 'active' : '' }} item" href="/accounts/vest">
-                Vests/SP
+                Vests/BP
               </a>
-              <a class="{{ filter == 'sbd' ? 'active' : '' }} item" href="/accounts/sbd">
-                SBD
+              <a class="{{ filter == 'bbd' ? 'active' : '' }} item" href="/accounts/bbd">
+                BBD
               </a>
-              <a class="{{ filter == 'steem' ? 'active' : '' }} item" href="/accounts/steem">
-                STEEM
+              <a class="{{ filter == 'bex' ? 'active' : '' }} item" href="/accounts/bex">
+                BEX
               </a>
               <a class="{{ filter == 'powerdown' ? 'active' : '' }} item" href="/accounts/powerdown">
                 Power Down
@@ -93,14 +93,14 @@
                   <div data-popup data-content="<?php echo number_format($current->vesting_withdraw_rate, 3, ".", ",") ?> VESTS" data-variation="inverted" data-position="left center">
                     <?php echo $this->largeNumber::format($current->vesting_withdraw_rate); ?> (<?php echo round($current->vesting_withdraw_rate / $current->vesting_shares * 100, 2) ?>%)
                   </div>
-                  +<?php echo $this->convert::vest2sp($current->vesting_withdraw_rate); ?>/Week
+                  +<?php echo $this->convert::vest2bp($current->vesting_withdraw_rate); ?>/Week
                 <?php endif; ?>
               </td>
               <td class="collapsing right aligned">
                 <div class="ui small header">
-                  <?php echo number_format($account->total_sbd_balance, 3, ".", ",") ?> SBD
+                  <?php echo number_format($account->total_bbd_balance, 3, ".", ",") ?> BBD
                   <div class="sub header">
-                    <?php echo number_format($account->total_balance, 3, ".", ",") ?> STEEM
+                    <?php echo number_format($account->total_balance, 3, ".", ",") ?> BEX
                   </div>
                 </div>
               </td>

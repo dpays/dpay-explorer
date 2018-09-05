@@ -33,11 +33,11 @@
           </p>
         </div>
         <div class="actions">
-          <a class="reply" href="https://steemit.com/tag/@{{ comment.author }}/{{ comment.permlink }}" target="_blank">
-            View on Steemit / Reply
+          <a class="reply" href="https://dsite.io/tag/@{{ comment.author }}/{{ comment.permlink }}" target="_blank">
+            View on dSite / Reply
           </a>
-          <a class="reply" href="https://steemdb.com/tag/@{{ comment.author }}/{{ comment.permlink }}" target="_blank">
-            View on SteemDB 
+          <a class="reply" href="https://bex.network/tag/@{{ comment.author }}/{{ comment.permlink }}" target="_blank">
+            View on BexNetwork 
           </a>
         </div>
       </div>

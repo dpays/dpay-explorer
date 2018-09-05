@@ -6,7 +6,7 @@
     {{ item[1]['op'][1]['withdrawn'] }}
   </span>
   <a class="ui button">
-    ~<?php echo $this->convert::vest2sp($item[1]['op'][1]['withdrawn']); ?>*
+    ~<?php echo $this->convert::vest2bp($item[1]['op'][1]['withdrawn']); ?>*
   </a>
 </span>
 <br>

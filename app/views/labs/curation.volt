@@ -63,7 +63,7 @@
                 </div>
                 <br>
                 <small>
-                  ~<?php echo $this->convert::vest2sp($account->total, ""); ?> SP*
+                  ~<?php echo $this->convert::vest2bp($account->total, ""); ?> BP*
                 </small>
               </td>
               <td>
