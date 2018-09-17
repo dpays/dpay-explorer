@@ -9,9 +9,9 @@ import sys
 import os
 
 stm = DPay(node=["ws://" + os.environ['dpaynode']], known_chains={"DPAY":
-    {'chain_assets': [{'asset': 'BEX', 'id': 0, 'precision': 3, 'symbol': 'BEX'},
-                      {'asset': 'BBD', 'id': 0, 'precision': 3, 'symbol': 'BBD'},
-                      {'asset': 'VESTS', 'id': 1, 'precision': 6, 'symbol': 'VESTS'}],
+    {'chain_assets': [{"asset": "BBD", "symbol": "BBD", "precision": 3, "id": 0},
+                      {"asset": "BEX", "symbol": "BEX", "precision": 3, "id": 1},
+                      {"asset": "VESTS", "symbol": "VESTS", "precision": 6, "id": 2}],
      'chain_id': '38f14b346eb697ba04ae0f5adcfaa0a437ed3711197704aa256a14cb9b4a8f26',
      'min_version': '0.0.0',
      'prefix': 'DWB'}
