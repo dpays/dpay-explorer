@@ -19,7 +19,7 @@ stm = DPay(node=["ws://" + os.environ['dpaynode']], known_chains={"DPAY":
 )
 
 mongo = MongoClient("mongodb://mongo")
-db = mongo.bexnetwork
+db = mongo.dpaynode
 
 init = db.status.find_one({'_id': 'height'})
 if(init):

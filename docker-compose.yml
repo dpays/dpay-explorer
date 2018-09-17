@@ -3,19 +3,19 @@ services:
   history:
     build: ./docker/history
     environment:
-      bexnetwork: "d.dpays.io"
+      dpaynode: "d.dpays.io"
     links:
       - mongo
   sync:
     build: ./docker/sync
     environment:
-      bexnetwork: "d.dpays.io"
+      dpaynode: "d.dpays.io"
     links:
       - mongo
   witnesses:
     build: ./docker/witnesses
     environment:
-      bexnetwork: "d.dpays.io"
+      dpaynode: "d.dpays.io"
     links:
       - mongo
   development:

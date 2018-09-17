@@ -20,7 +20,7 @@ stm = DPay(node=["ws://" + os.environ['dpaynode']], known_chains={"DPAY":
 )
 
 mongo = MongoClient("mongodb://mongo")
-db = mongo.bexnetwork
+db = mongo.dpaynode
 
 misses = {}
 
