@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
-from dpayapi.dpaynoderpc import DPayNodeRPC
-from dpaypy.dpay import Post
+from dpaygo import DPay
 from pymongo import MongoClient
 from pprint import pprint
 import collections
@@ -9,7 +8,16 @@ import time
 import sys
 import os
 
-rpc = DPayNodeRPC("ws://" + os.environ['dpaynode'], "", "", apis=["follow", "database"])
+stm = DPay(node=["ws://" + os.environ['dpaynode']], known_chains={"DPAY":
+    {'chain_assets': [{'asset': 'BEX', 'id': 0, 'precision': 3, 'symbol': 'BEX'},
+                      {'asset': 'BBD', 'id': 0, 'precision': 3, 'symbol': 'BBD'},
+                      {'asset': 'VESTS', 'id': 1, 'precision': 6, 'symbol': 'VESTS'}],
+     'chain_id': '38f14b346eb697ba04ae0f5adcfaa0a437ed3711197704aa256a14cb9b4a8f26',
+     'min_version': '0.0.0',
+     'prefix': 'DWB'}
+    }
+)
+
 mongo = MongoClient("mongodb://mongo")
 db = mongo.bexnetwork
 
@@ -61,7 +69,7 @@ def process_op(opObj, block, blockid):
 
 def process_block(block, blockid):
     save_block(block, blockid)
-    ops = rpc.get_ops_in_block(blockid, False)
+    ops = stm.rpc.get_ops_in_block(blockid, False)
     for tx in block['transactions']:
       for opObj in tx['operations']:
         process_op(opObj, block, blockid)
@@ -112,7 +120,7 @@ def save_author_reward(op, block, blockid):
         '_id': _id,
         '_ts': datetime.strptime(block['timestamp'], "%Y-%m-%dT%H:%M:%S")
     })
-    for key in ['bbd_payout', 'dpay_payout', 'vesting_payout']:
+    for key in ['dpay_payout', 'vesting_payout']:
         reward[key] = float(reward[key].split()[0])
     db.author_reward.update({'_id': _id}, reward, upsert=True)
     queue_update_account(op['author'])
@@ -235,9 +243,9 @@ def save_witness_vote(op, block, blockid):
 
 def update_comment(author, permlink):
     _id = author + '/' + permlink
-    if(_id == "jared/dpaypy"):
+    if(_id == "xeroc/re-piston-20160818t080811"):
       return
-    comment = rpc.get_content(author, permlink).copy()
+    comment = stm.rpc.get_content(author, permlink).copy()
     comment.update({
         '_id': _id,
     })
@@ -251,7 +259,7 @@ def update_comment(author, permlink):
         active_votes.append(vote)
     comment['active_votes'] = active_votes
 
-    for key in ['author_reputation', 'net_rshares', 'children_abs_rshares', 'abs_rshares', 'children_rshares2', 'vote_rshares']:
+    for key in ['author_reputation', 'net_rshares', 'children_abs_rshares', 'abs_rshares', 'vote_rshares']:
         comment[key] = float(comment[key])
     for key in ['total_pending_payout_value', 'pending_payout_value', 'max_accepted_payout', 'total_payout_value', 'curator_payout_value']:
         comment[key] = float(comment[key].split()[0])
@@ -297,50 +305,49 @@ def queue_update_account(account_name):
 def update_account(account_name):
     # pprint("Update Account: " + account_name)
     # Load State
-    state = rpc.get_accounts([account_name])
+    state = stm.rpc.get_accounts([account_name])
     if not state:
       return
     # Get Account Data
     account = collections.OrderedDict(sorted(state[0].items()))
-    # Get followers
-    account['followers'] = []
-    account['followers_count'] = 0
-    account['followers_mvest'] = 0
-    followers_results = rpc.get_followers(account_name, "", "blog", 100, api="follow")
-    while followers_results:
-      last_account = ""
-      for follower in followers_results:
-        last_account = follower['follower']
-        if 'blog' in follower['what'] or 'posts' in follower['what']:
-          account['followers'].append(follower['follower'])
-          account['followers_count'] += 1
-          if follower['follower'] in mvest_per_account.keys():
-            account['followers_mvest'] += float(mvest_per_account[follower['follower']])
-      followers_results = rpc.get_followers(account_name, last_account, "blog", 100, api="follow")[1:]
-    # Get following
-    account['following'] = []
-    account['following_count'] = 0
-    following_results = rpc.get_following(account_name, -1, "blog", 100, api="follow")
-    while following_results:
-      last_account = ""
-      for following in following_results:
-        last_account = following['following']
-        if 'blog' in following['what'] or 'posts' in following['what']:
-          account['following'].append(following['following'])
-          account['following_count'] += 1
-      following_results = rpc.get_following(account_name, last_account, "blog", 100, api="follow")[1:]
+    # # Get followers
+    # account['followers'] = []
+    # account['followers_count'] = 0
+    # account['followers_mvest'] = 0
+    # followers_results = stm.rpc.get_followers(account_name, "", "blog", 100)
+    # while followers_results:
+    #   last_account = ""
+    #   for follower in followers_results:
+    #     last_account = follower['follower']
+    #     if 'blog' in follower['what'] or 'posts' in follower['what']:
+    #       account['followers'].append(follower['follower'])
+    #       account['followers_count'] += 1
+    #       if follower['follower'] in mvest_per_account.keys():
+    #         account['followers_mvest'] += float(mvest_per_account[follower['follower']])
+    #   followers_results = stm.rpc.get_followers(account_name, last_account, "blog", 100)[1:]
+    # # Get following
+    # account['following'] = []
+    # account['following_count'] = 0
+    # following_results = stm.rpc.get_following(account_name, -1, "blog", 100)
+    # while following_results:
+    #   last_account = ""
+    #   for following in following_results:
+    #     last_account = following['following']
+    #     if 'blog' in following['what'] or 'posts' in following['what']:
+    #       account['following'].append(following['following'])
+    #       account['following_count'] += 1
+    #   following_results = stm.rpc.get_following(account_name, last_account, "blog", 100)[1:]
     # Convert to Numbers
     account['proxy_witness'] = float(account['proxied_vsf_votes'][0]) / 1000000
     for key in ['lifetime_bandwidth', 'reputation', 'to_withdraw']:
         account[key] = float(account[key])
-    for key in ['balance', 'bbd_balance', 'bbd_seconds', 'savings_balance', 'savings_bbd_balance', 'vesting_balance', 'vesting_shares', 'vesting_withdraw_rate']:
+    for key in ['balance', 'savings_balance', 'vesting_balance', 'vesting_shares', 'vesting_withdraw_rate']:
         account[key] = float(account[key].split()[0])
     # Convert to Date
-    for key in ['created','last_account_recovery','last_account_update','last_active_proved','last_bandwidth_update','last_market_bandwidth_update','last_owner_proved','last_owner_update','last_post','last_root_post','last_vote_time','next_vesting_withdrawal','savings_bbd_last_interest_payment','savings_bbd_seconds_last_update','bbd_last_interest_payment','bbd_seconds_last_update']:
+    for key in ['created','last_account_recovery','last_account_update','last_active_proved','last_bandwidth_update','last_market_bandwidth_update','last_owner_proved','last_owner_update','last_post','last_root_post','last_vote_time','next_vesting_withdrawal']:
         account[key] = datetime.strptime(account[key], "%Y-%m-%dT%H:%M:%S")
     # Combine Savings + Balance
     account['total_balance'] = account['balance'] + account['savings_balance']
-    account['total_bbd_balance'] = account['bbd_balance'] + account['savings_bbd_balance']
     # Update our current info about the account
     mvest_per_account.update({account['name']: account['vesting_shares']})
     # Save current state of account
@@ -351,8 +358,8 @@ def update_account(account_name):
 
 if __name__ == '__main__':
     # Let's find out how often blocks are generated!
-    config = rpc.get_config()
-    block_interval = config["DPAY_BLOCK_INTERVAL"]
+    config = stm.rpc.get_config()
+    block_interval = config["STEEMIT_BLOCK_INTERVAL"]
     load_accounts()
     # We are going to loop indefinitely
     while True:
@@ -400,12 +407,12 @@ if __name__ == '__main__':
             update_account(item['_id'])
 
         # Process New Blocks
-        props = rpc.get_dynamic_global_properties()
+        props = stm.rpc.get_dynamic_global_properties()
         block_number = props['last_irreversible_block_num']
         while (block_number - last_block) > 0:
             last_block += 1
             # Get full block
-            block = rpc.get_block(last_block)
+            block = stm.rpc.get_block(last_block)
             # Process block
             process_block(block, last_block)
             # Update our block height

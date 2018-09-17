@@ -1,6 +1,5 @@
 from datetime import datetime
-from dpayapi.dpaynoderpc import DPayNodeRPC
-from dpaypy.dpay import Post
+from dpaygo import DPay
 from pymongo import MongoClient
 from pprint import pprint
 from time import gmtime, strftime
@@ -10,7 +9,16 @@ import time
 import sys
 import os
 
-rpc = DPayNodeRPC("ws://" + os.environ['dpaynode'], "", "", apis=["follow", "database"])
+stm = DPay(node=["ws://" + os.environ['dpaynode']], known_chains={"DPAY":
+    {'chain_assets': [{'asset': 'BEX', 'id': 0, 'precision': 3, 'symbol': 'BEX'},
+                      {'asset': 'BBD', 'id': 0, 'precision': 3, 'symbol': 'BBD'},
+                      {'asset': 'VESTS', 'id': 1, 'precision': 6, 'symbol': 'VESTS'}],
+     'chain_id': '38f14b346eb697ba04ae0f5adcfaa0a437ed3711197704aa256a14cb9b4a8f26',
+     'min_version': '0.0.0',
+     'prefix': 'DWB'}
+    }
+)
+
 mongo = MongoClient("mongodb://mongo")
 db = mongo.bexnetwork
 
@@ -19,7 +27,7 @@ misses = {}
 # Command to check how many blocks a witness has missed
 def check_misses():
     global misses
-    witnesses = rpc.get_witnesses_by_vote('', 100)
+    witnesses = stm.rpc.get_witnesses_by_vote('', 100)
     for witness in witnesses:
         owner = str(witness['owner'])
         # Check if we have a status on the current witness
@@ -44,26 +52,14 @@ def check_misses():
 def update_witnesses():
     now = datetime.now().date()
 
-    pprint("BexNetwork - Update Miner Queue")
-    miners = rpc.get_miner_queue()
-    db.statistics.update({
-      '_id': 'miner_queue'
-    }, {
-      'key': 'miner_queue',
-      'updated': datetime.combine(now, datetime.min.time()),
-      'value': miners
-    }, upsert=True)
     scantime = datetime.now()
-    users = rpc.get_witnesses_by_vote('', 100)
-    pprint("BexNetwork - Update Witnesses (" + str(len(users)) + " accounts)")
+    users = stm.rpc.get_witnesses_by_vote('', 100)
+    pprint("DPayDB - Update Witnesses (" + str(len(users)) + " accounts)")
     db.witness.remove({})
     for user in users:
         # Convert to Numbers
         for key in ['virtual_last_update', 'virtual_position', 'virtual_scheduled_time', 'votes']:
             user[key] = float(user[key])
-        # Convert to Date
-        for key in ['last_bbd_exchange_update']:
-            user[key] = datetime.strptime(user[key], "%Y-%m-%dT%H:%M:%S")
         # Save current state of account
         db.witness.update({'_id': user['owner']}, user, upsert=True)
         # Create our Snapshot dict

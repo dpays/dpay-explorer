@@ -1,23 +1,23 @@
 version: '2'
 services:
-  # history:
-  #   build: ./docker/history
-  #   environment:
-  #     dpaynode: "dpayd.dpays.io"
-  #   links:
-  #     - mongo
-  # sync:
-  #   build: ./docker/sync
-  #   environment:
-  #     dpaynode: "dpayd.dpays.io"
-  #   links:
-  #     - mongo
-  # witnesses:
-  #   build: ./docker/witnesses
-  #   environment:
-  #     dpaynode: "dpayd.dpays.io"
-  #   links:
-  #     - mongo
+  history:
+    build: ./docker/history
+    environment:
+      bexnetwork: "d.dpays.io"
+    links:
+      - mongo
+  sync:
+    build: ./docker/sync
+    environment:
+      bexnetwork: "d.dpays.io"
+    links:
+      - mongo
+  witnesses:
+    build: ./docker/witnesses
+    environment:
+      bexnetwork: "d.dpays.io"
+    links:
+      - mongo
   development:
     build: ./docker/development
     links:
@@ -25,16 +25,14 @@ services:
     volumes:
       - .:/var/www/html
     ports:
-      - "80:80"
+      - "8680:80"
   mongodata:
     image: mongo:3.3.10
     volumes:
-      - /data/db
+      - /data/db:/data/db
     command: --break-mongo
   mongo:
     image: mongo:3.3.10
     volumes_from:
       - mongodata
-    ports:
-      - "27017:27017"
     command: --smallfiles --rest
