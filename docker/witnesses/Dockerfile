@@ -11,4 +11,4 @@ RUN pip3 install pymongo scrypt apscheduler
 
 COPY . /src
 
-CMD ["python", "/src/history.py"]
+CMD ["python", "/src/witnesses.py"]
