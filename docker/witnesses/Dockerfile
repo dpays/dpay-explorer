@@ -7,7 +7,7 @@ RUN git clone https://github.com/dpays/dpaygo.git && \
     cd dpaygo && \
     make install
 
-RUN pip3 install dpaygo pymongo scrypt apscheduler
+RUN pip3 install pymongo scrypt apscheduler
 
 COPY . /src
 
