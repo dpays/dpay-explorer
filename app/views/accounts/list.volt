@@ -9,50 +9,14 @@
   <div class="ui middle aligned stackable grid container">
     <div class="row">
       <div class="column">
-        <div class="ui top attached menu">
-          <div class="ui dropdown item">
-            Richlist
-            <i class="dropdown icon"></i>
-            <div class="menu">
-              <a class="{{ filter == 'vest' ? 'active' : '' }} item" href="/accounts/vest">
-                Vests/BP
-              </a>
-              <a class="{{ filter == 'bbd' ? 'active' : '' }} item" href="/accounts/bbd">
-                BBD
-              </a>
-              <a class="{{ filter == 'bex' ? 'active' : '' }} item" href="/accounts/bex">
-                BEX
-              </a>
-              <a class="{{ filter == 'powerdown' ? 'active' : '' }} item" href="/accounts/powerdown">
-                Power Down
-              </a>
-            </div>
-          </div>
-          <a class="{{ filter == 'posts' ? 'active' : '' }} item" href="/accounts/posts">
-            Posts
-          </a>
-          <div class="ui dropdown item">
-            Social
-            <i class="dropdown icon"></i>
-            <div class="menu">
-              <a class="{{ filter == 'followers' ? 'active' : '' }} item" href="/accounts/followers">
-                Followers
-              </a>
-              <a class="{{ filter == 'followers_mvest' ? 'active' : '' }} item" href="/accounts/followers_mvest">
-                Value of Followers
-              </a>
-            </div>
-          </div>
-          <a class="{{ filter == 'reputation' ? 'active' : '' }} item" href="/accounts/reputation">
-            Reputation
-          </a>
+        <div class="ui top attached menu seethrough">
           <div class="right menu">
             <div class="item">
               Data updated <?php echo $this->timeAgo::mongo($accounts[0]->scanned); ?>
             </div>
           </div>
         </div>
-        <table class="ui attached table">
+        <table class="ui attached table seethrough">
           <thead>
             <tr>
               <th>Account</th>
@@ -93,15 +57,12 @@
                   <div data-popup data-content="<?php echo number_format($current->vesting_withdraw_rate, 3, ".", ",") ?> VESTS" data-variation="inverted" data-position="left center">
                     <?php echo $this->largeNumber::format($current->vesting_withdraw_rate); ?> (<?php echo round($current->vesting_withdraw_rate / $current->vesting_shares * 100, 2) ?>%)
                   </div>
-                  +<?php echo $this->convert::vest2bp($current->vesting_withdraw_rate); ?>/Week
+                  +<?php echo $this->convert::vest2sp($current->vesting_withdraw_rate); ?>/Week
                 <?php endif; ?>
               </td>
               <td class="collapsing right aligned">
                 <div class="ui small header">
-                  <?php echo number_format($account->total_bbd_balance, 3, ".", ",") ?> BBD
-                  <div class="sub header">
-                    <?php echo number_format($account->total_balance, 3, ".", ",") ?> BEX
-                  </div>
+                  <?php echo number_format($account->total_balance, 3, ".", ",") ?> BEX
                 </div>
               </td>
             </tr>

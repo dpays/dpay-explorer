@@ -1,14 +1,11 @@
 <?php
 namespace BexNetwork\Controllers;
-
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\BSON\ObjectID;
-
 use BexNetwork\Models\Witness;
 use BexNetwork\Models\WitnessMiss;
 use BexNetwork\Models\WitnessVote;
 use BexNetwork\Models\Statistics;
-
 class WitnessController extends ControllerBase
 {
   public function listAction()
@@ -58,21 +55,12 @@ class WitnessController extends ControllerBase
       $misses[$data['_id']] = $data['total'];
     }
     foreach($witnesses as $index => $witness) {
-      // Highlight Green for top 19
-      if($index < 19) {
+      // Highlight Green for top 20
+      if($index < 20) {
         $witness->row_status = "positive";
       }
-      // Highlight Red is no price feed exists
-      if($witness->bbd_exchange_rate->base === "0.000 BEX") {
-        $witness->row_status = "warning";
-      }
-      // Highlight Red is price feed older than 24 hrs
-      if((string) $witness->last_bbd_exchange_update <= strtotime("-1 week") * 1000) {
-        $witness->row_status = "warning";
-        $witness->last_bbd_exchange_update_late = true;
-      }
       // Highlight Red if the signing key is invalid
-      if(!$witness->signing_key || $witness->signing_key == "" || $witness->signing_key == "STM1111111111111111111111111111111114T1Anm") {
+      if(!$witness->signing_key || $witness->signing_key == "" || $witness->signing_key == "DWB1111111111111111111111111111111114T1Anm") {
         $witness->row_status = "negative";
         $witness->invalid_signing_key = true;
       }

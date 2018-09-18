@@ -9,7 +9,7 @@ import time
 import sys
 import os
 
-stm = DPay(node=["ws://" + os.environ['dpaynode']], known_chains={"DPAY":
+stm = DPay(node=["https://" + os.environ['dpaynode']], known_chains={"DPAY":
     {'chain_assets': [{"asset": "BBD", "symbol": "BBD", "precision": 3, "id": 0},
                       {"asset": "BEX", "symbol": "BEX", "precision": 3, "id": 1},
                       {"asset": "VESTS", "symbol": "VESTS", "precision": 6, "id": 2}],

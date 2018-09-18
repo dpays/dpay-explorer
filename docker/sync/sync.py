@@ -8,7 +8,7 @@ import time
 import sys
 import os
 
-stm = DPay(node=["ws://" + os.environ['dpaynode']], known_chains={"DPAY":
+stm = DPay(node=["https://" + os.environ['dpaynode']], known_chains={"DPAY":
     {'chain_assets': [{"asset": "BBD", "symbol": "BBD", "precision": 3, "id": 0},
                       {"asset": "BEX", "symbol": "BEX", "precision": 3, "id": 1},
                       {"asset": "VESTS", "symbol": "VESTS", "precision": 6, "id": 2}],
@@ -359,7 +359,7 @@ def update_account(account_name):
 if __name__ == '__main__':
     # Let's find out how often blocks are generated!
     config = stm.rpc.get_config()
-    block_interval = config["STEEMIT_BLOCK_INTERVAL"]
+    block_interval = config["DPAY_BLOCK_INTERVAL"]
     load_accounts()
     # We are going to loop indefinitely
     while True:

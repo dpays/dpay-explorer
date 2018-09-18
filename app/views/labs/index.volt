@@ -15,7 +15,7 @@
   <div class="ui middle aligned stackable grid container">
     <div class="row">
       <div class="column">
-        <div class="ui segment">
+        <div class="ui segment seethrough">
           <div class="ui header">
             Current Experiments
             <div class="sub header">
@@ -84,7 +84,7 @@
                     biggest power ups
                   </a>
                   <div class="sub header">
-                    The accounts who have powered up the most BP over the past 30 days.
+                    The accounts who have powered up the most SP over the past 30 days.
                   </div>
                 </div>
               </div>
@@ -104,7 +104,7 @@
             </div>
           </div>
         </div>
-        <div class="ui segment">
+        <div class="ui segment seethrough">
           <div class="ui header">
             API Endpoints
             <div class="sub header">
@@ -179,8 +179,6 @@
     </div>
   </div>
 </div>
-
 {% endblock %}
-
 {% block scripts %}
 {% endblock %}

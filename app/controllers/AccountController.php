@@ -1,8 +1,6 @@
 <?php
 namespace BexNetwork\Controllers;
-
 use MongoDB\BSON\UTCDateTime;
-
 use BexNetwork\Models\Account;
 use BexNetwork\Models\AccountHistory;
 use BexNetwork\Models\AuthorReward;
@@ -20,10 +18,8 @@ use BexNetwork\Models\VestingWithdraw;
 use BexNetwork\Models\WitnessMiss;
 use BexNetwork\Models\WitnessHistory;
 use BexNetwork\Models\WitnessVote;
-
 class AccountController extends ControllerBase
 {
-
   private function getAccount()
   {
     $account = strtolower($this->dispatcher->getParam("account"));
@@ -46,7 +42,6 @@ class AccountController extends ControllerBase
     }
     return $account;
   }
-
   public function viewAction()
   {
     $account = $this->getAccount();
@@ -66,7 +61,6 @@ class AccountController extends ControllerBase
     $this->view->chart = true;
     $this->view->pick("account/view");
   }
-
   public function propsAction()
   {
     $account = $this->getAccount();
@@ -77,7 +71,6 @@ class AccountController extends ControllerBase
     ));
     $this->view->pick("account/view");
   }
-
   public function postsAction()
   {
     $account = $this->getAccount();
@@ -102,7 +95,6 @@ class AccountController extends ControllerBase
     $this->view->chart = true;
     $this->view->pick("account/view");
   }
-
   public function votesAction()
   {
     $account = $this->getAccount();
@@ -127,7 +119,6 @@ class AccountController extends ControllerBase
     $this->view->chart = true;
     $this->view->pick("account/view");
   }
-
   public function repliesAction()
   {
     $account = $this->getAccount();
@@ -141,7 +132,6 @@ class AccountController extends ControllerBase
     ));
     $this->view->pick("account/view");
   }
-
   public function followersAction()
   {
     $account = $this->getAccount();
@@ -152,7 +142,6 @@ class AccountController extends ControllerBase
     $this->view->chart = true;
     $this->view->pick("account/view");
   }
-
   public function followersWhalesAction()
   {
     $account = $this->getAccount();
@@ -162,7 +151,6 @@ class AccountController extends ControllerBase
     ]);
     $this->view->pick("account/view");
   }
-
   public function followingAction()
   {
     $account = $this->getAccount();
@@ -172,7 +160,6 @@ class AccountController extends ControllerBase
     ]);
     $this->view->pick("account/view");
   }
-
   public function witnessAction()
   {
     $account = $this->getAccount();
@@ -207,13 +194,12 @@ class AccountController extends ControllerBase
     $this->view->chart = true;
     $this->view->pick("account/view");
   }
-
   public function blocksAction()
   {
     $account = $this->getAccount();
-    $this->view->mining = Pow::find(array(
+    $this->view->mining = Block::find(array(
       array(
-        'work.1.input.worker_account' => $account,
+        'witness' => $account,
       ),
       'sort' => array('_ts' => -1),
       'limit' => 100
@@ -221,7 +207,6 @@ class AccountController extends ControllerBase
     $this->view->chart = true;
     $this->view->pick("account/view");
   }
-
   public function missedAction()
   {
     $account = $this->getAccount();
@@ -234,7 +219,6 @@ class AccountController extends ControllerBase
     ));
     $this->view->pick("account/view");
   }
-
   public function reblogsAction()
   {
     $account = $this->getAccount();
@@ -249,7 +233,6 @@ class AccountController extends ControllerBase
     ));
     $this->view->pick("account/view");
   }
-
   public function rebloggedAction()
   {
     $account = $this->getAccount();
@@ -264,7 +247,6 @@ class AccountController extends ControllerBase
     ));
     $this->view->pick("account/view");
   }
-
   public function proxiedAction()
   {
     $account = $this->getAccount();
@@ -273,7 +255,6 @@ class AccountController extends ControllerBase
     ));
     $this->view->pick("account/view");
   }
-
   public function curationAction()
   {
     $account = $this->getAccount();
@@ -345,7 +326,6 @@ class AccountController extends ControllerBase
     $this->view->chart = true;
     $this->view->pick("account/view");
   }
-
   public function curationDateAction() {
     $account = $this->getAccount();
     $this->view->date = $this->dispatcher->getParam("date");
@@ -363,7 +343,6 @@ class AccountController extends ControllerBase
     ));
     $this->view->pick("account/view");
   }
-
   public function authoringAction()
   {
     $account = $this->getAccount();
@@ -383,7 +362,6 @@ class AccountController extends ControllerBase
     $this->view->chart = true;
     $this->view->pick("account/view");
   }
-
   public function powerupAction()
   {
     $account = $this->getAccount();
@@ -394,7 +372,6 @@ class AccountController extends ControllerBase
     $this->view->chart = true;
     $this->view->pick("account/view");
   }
-
   public function powerdownAction()
   {
     $account = $this->getAccount();
@@ -405,7 +382,6 @@ class AccountController extends ControllerBase
     $this->view->chart = true;
     $this->view->pick("account/view");
   }
-
   public function transfersAction()
   {
     $account = $this->getAccount();
@@ -433,7 +409,6 @@ class AccountController extends ControllerBase
     $this->view->chart = true;
     $this->view->pick("account/view");
   }
-
   public function dataAction()
   {
     $account = $this->getAccount();

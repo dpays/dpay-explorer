@@ -2,7 +2,7 @@ from autobahn.twisted.websocket import WebSocketServerFactory, \
     WebSocketServerProtocol, \
     listenWS
 from datetime import datetime, timedelta
-from dpayapi.dpaynoderpc import DPayNodeRPC
+from dpaypyapi.dpaynoderpc import DPayNodeRPC
 from dpaypy.dpay import Post
 from pprint import pprint
 from twisted.internet import reactor
@@ -15,7 +15,7 @@ import sys
 import os
 import re
 
-rpc = DPayNodeRPC("ws://" + os.environ['dpaynode'], "", "", apis=["follow", "database"])
+rpc = DPayNodeRPC("https://" + os.environ['dpaynode'], "", "", apis=["follow", "database"])
 
 class BroadcastServerProtocol(WebSocketServerProtocol):
 
@@ -68,7 +68,7 @@ class BroadcastServerFactory(WebSocketServerFactory):
         reactor.callLater(1, self.tick)
 
     def publishProps(self, props):
-        total_vesting_fund_dpay = float(props['total_vesting_fund_dpay'].split(" ")[0])
+        total_vesting_fund_dpayt = float(props['total_vesting_fund_dpay'].split(" ")[0])
         total_vesting_shares = float(props['total_vesting_shares'].split(" ")[0])
         props['dpay_per_mvests'] = math.floor(total_vesting_fund_dpay / total_vesting_shares * 1000000 * 1000) / 1000
         props['reversible_blocks'] = props['head_block_number'] - props['last_irreversible_block_num']

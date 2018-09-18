@@ -1,11 +1,8 @@
 <?php
 namespace BexNetwork\Controllers;
-
 use BexNetwork\Models\Block;
-
 class BlockController extends ControllerBase
 {
-
   public function viewAction()
   {
     $height = $this->dispatcher->getParam("height");
@@ -15,10 +12,9 @@ class BlockController extends ControllerBase
       )
     ));
     if(!$this->view->current) {
-      $this->flashSession->error('Block "'.$block.'" does not exist on BexNetwork currently.');
+      $this->flashSession->error('Block "'.$height.'" does not exist on the dPay network currently.');
       $this->response->redirect();
       return;
     }
   }
-
 }

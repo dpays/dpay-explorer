@@ -2,7 +2,7 @@
 Description=BexNetwork.com Witnesses Service
 
 [Service]
-Environment=dpaynode=dpayd.dpays.io
+Environment=dpaynode=api.dpays.io
 WorkingDirectory=/var/www/com_bexnetwork/docker/witnesses
 ExecStart=/usr/bin/python3 witnesses.py
 Restart=always

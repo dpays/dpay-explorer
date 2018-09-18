@@ -41,7 +41,6 @@
       </td>
       <td class="collapsing right aligned">
         <div class="ui small header">
-          <?php echo number_format($proxy->total_bbd_balance, 3, ".", ",") ?> BBD
           <div class="sub header">
             <?php echo number_format($proxy->total_balance, 3, ".", ",") ?> BEX
           </div>

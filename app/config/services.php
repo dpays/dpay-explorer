@@ -13,14 +13,12 @@ use Phalcon\Mvc\Url as UrlResolver;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
-
 /**
  * Register the global configuration as config
  */
 $di->setShared('config', function () {
     return include APP_PATH . "/config/config.php";
 });
-
 /**
  * The URL component is used to generate all kind of urls in the application
  */
@@ -30,17 +28,13 @@ $di->setShared('url', function () {
     $url->setBaseUri($config->application->baseUri);
     return $url;
 });
-
 /**
  * Setting up the view component
  */
 $di->set('view', function () {
     $config = $this->getConfig();
-
     $view = new View();
-
     $view->setViewsDir($config->application->viewsDir);
-
     $view->registerEngines([
       '.volt' => function ($view) {
         $config = $this->getConfig();
@@ -60,10 +54,8 @@ $di->set('view', function () {
         return $volt;
       }
     ]);
-
     return $view;
 }, true);
-
 /**
  * Database connection is created based in the parameters defined in the configuration file
  */
@@ -73,13 +65,11 @@ $di->setShared('mongo', function () {
   $options = [];
   return $mongo->selectDatabase($config->database->dbname, $options);
 });
-
 // Collection Manager is required for MongoDB
 $di->setShared('collectionManager', function () {
   $manager = new Manager();
   return $manager;
 });
-
 /**
  * If the configuration specify the use of metadata adapter use it or use memory otherwise
  */
@@ -89,7 +79,6 @@ $di->set('modelsMetadata', function () {
     'metaDataDir' => $config->application->cacheDir . 'metaData/'
   ]);
 });
-
 /**
  * Start the session the first time some component request the session service
  */
@@ -98,7 +87,6 @@ $di->set('session', function () {
     $session->start();
     return $session;
 });
-
 /**
  * Crypt service
  */
@@ -108,7 +96,6 @@ $di->set('crypt', function () {
     $crypt->setKey($config->application->cryptSalt);
     return $crypt;
 });
-
 /**
  * Dispatcher use a default namespace
  */
@@ -130,38 +117,30 @@ $di->set('dispatcher', function () {
   $dispatcher->setEventsManager($eventsManager);
   return $dispatcher;
 });
-
 /**
  * Loading routes from the routes.php file
  */
 $di->set('router', function () {
     return require APP_PATH . '/config/routes.php';
 });
-
 /**
  * Logger service
  */
 $di->set('logger', function ($filename = null, $format = null) {
   $config = $this->getConfig();
-
   $format   = $format ?: $config->get('logger')->format;
   $filename = trim($filename ?: $config->get('logger')->filename, '\\/');
   $path     = rtrim($config->get('logger')->path, '\\/') . DIRECTORY_SEPARATOR;
-
   $formatter = new FormatterLine($format, $config->get('logger')->date);
   $logger    = new FileLogger($path . $filename);
-
   $logger->setFormatter($formatter);
   $logger->setLogLevel($config->get('logger')->logLevel);
-
   return $logger;
 });
-
 $di->set('dpayd', function() {
   require_once(APP_PATH . '/libs/dpayd.php');
   return new DPayd('https://dpayd.dpays.io');
 });
-
 $di->set('memcached', function() {
   $frontendOptions = array(
     'lifetime' => 60 * 5
@@ -179,7 +158,6 @@ $di->set('memcached', function() {
   $cache = new \Phalcon\Cache\Backend\Libmemcached($frontCache, $backendOptions);
   return $cache;
 });
-
 $di->set('convert', function () { return new BexNetwork\Helpers\Convert(); });
 $di->set('largeNumber', function () { return new BexNetwork\Helpers\LargeNumber(); });
 $di->set('reputation', function () { return new BexNetwork\Helpers\Reputation(); });

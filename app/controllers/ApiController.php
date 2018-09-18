@@ -1,9 +1,7 @@
 <?php
 namespace BexNetwork\Controllers;
-
 use MongoDB\BSON\Regex;
 use MongoDB\BSON\UTCDateTime;
-
 use BexNetwork\Models\Account;
 use BexNetwork\Models\AuthorReward;
 use BexNetwork\Models\Block;
@@ -16,17 +14,14 @@ use BexNetwork\Models\AccountHistory;
 use BexNetwork\Models\PropsHistory;
 use BexNetwork\Models\Witness;
 use MongoDB\BSON\ObjectID;
-
 class ApiController extends ControllerBase
 {
-
   public function initialize()
   {
     header('Content-type:application/json');
     $this->view->disable();
     ini_set('precision', 20);
   }
-
   public function voteAction()
   {
     $pipeline = [
@@ -62,7 +57,6 @@ class ApiController extends ControllerBase
     $data = Vote::agg($pipeline)->toArray();
     echo json_encode($data, JSON_PRETTY_PRINT);
   }
-
   public function votersAction()
   {
     $pipeline = [
@@ -110,7 +104,6 @@ class ApiController extends ControllerBase
     $data = Vote::agg($pipeline)->toArray();
     echo json_encode($data, JSON_PRETTY_PRINT);
   }
-
   public function activityAction()
   {
     $data = Comment::agg([
@@ -166,7 +159,6 @@ class ApiController extends ControllerBase
     ])->toArray();
     echo json_encode($data, JSON_PRETTY_PRINT);
   }
-
   public function growthAction()
   {
     $users = Statistics::find([
@@ -241,7 +233,6 @@ class ApiController extends ControllerBase
     }
     echo json_encode($data, JSON_PRETTY_PRINT);
   }
-
   public function newbiesAction()
   {
     $data = AccountHistory::agg([
@@ -279,7 +270,6 @@ class ApiController extends ControllerBase
     ])->toArray();
     echo json_encode($data, JSON_PRETTY_PRINT);
   }
-
   public function supplyAction()
   {
     $data = AccountHistory::agg([
@@ -302,10 +292,7 @@ class ApiController extends ControllerBase
           'bbd' => [
             '$sum' => '$bbd_balance'
           ],
-          'bbd_savings' => [
-            '$sum' => '$savings_bbd_balance'
-          ],
-          'bex' => [
+          'dpay' => [
             '$sum' => '$balance'
           ],
           'dpay_savings' => [
@@ -331,7 +318,6 @@ class ApiController extends ControllerBase
     }
     echo json_encode($data, JSON_PRETTY_PRINT);
   }
-
   public function propsAction()
   {
     $data = PropsHistory::find([
@@ -344,7 +330,6 @@ class ApiController extends ControllerBase
     }
     echo json_encode($data, JSON_PRETTY_PRINT);
   }
-
   public function percentageAction()
   {
     $results = PropsHistory::find([
@@ -359,7 +344,6 @@ class ApiController extends ControllerBase
     }
     echo json_encode($data, JSON_PRETTY_PRINT);
   }
-
   public function debtloadAction()
   {
     $results = PropsHistory::find([
@@ -374,12 +358,10 @@ class ApiController extends ControllerBase
     }
     echo json_encode($data, JSON_PRETTY_PRINT);
   }
-
   public function rsharesAction() {
     $data = Comment::rsharesAllocation()->toArray();
     echo json_encode($data, JSON_PRETTY_PRINT);
   }
-
   public function downvotesAction() {
     $data = Comment::agg([
       [
@@ -472,7 +454,6 @@ class ApiController extends ControllerBase
     header('Content-type:application/json');
     echo json_encode($data, JSON_PRETTY_PRINT);
   }
-
   public function topwitnessesAction() {
     $witnesses = Witness::find(array(
       array(
@@ -497,18 +478,15 @@ class ApiController extends ControllerBase
     }
     echo json_encode($data, JSON_PRETTY_PRINT);
   }
-
   public function accountsAction() {
-
     $query = array();
     $sorting = array();
-
     $filter = $this->request->get('sort');
     switch($filter) {
       case "bbd":
         $sorting = array('total_bbd_balance' => -1);
         break;
-      case "bex":
+      case "dpay":
         $sorting = array('total_balance' => -1);
         break;
       case "vest":
@@ -521,7 +499,6 @@ class ApiController extends ControllerBase
         $sorting = array('followers_count' => -1);
         break;
     }
-
     $account = $this->request->get('account');
     if($account) {
       if(is_array($account)) {
@@ -529,27 +506,21 @@ class ApiController extends ControllerBase
       } else {
         $query['name'] = (string) $account;
       }
-
     }
-
     $page = $this->request->get('page') ?: 1;
     $perPage = 100;
     $skip = $perPage * ($page - 1);
-
     $data = Account::find(array(
       $query,
       "sort" => $sorting,
       "limit" => $perPage,
       "skip" => $skip
     ));
-
     foreach($data as $idx => $document) {
       $data[$idx] = $document->toArray();
     }
-
     echo json_encode($data, JSON_PRETTY_PRINT);
   }
-
   public function powerupAction() {
     $transactions = Block30d::agg([
       [
@@ -612,7 +583,6 @@ class ApiController extends ControllerBase
     }
     echo json_encode($transactions, JSON_PRETTY_PRINT);
   }
-
   public function rewardsAction() {
     $rewards = AuthorReward::agg([
       [
@@ -634,7 +604,7 @@ class ApiController extends ControllerBase
           ],
           'count' => ['$sum' => 1],
           'bbd' => ['$sum' => '$bbd_payout'],
-          'bex' => ['$sum' => '$dpay_payout'],
+          'dpay' => ['$sum' => '$dpay_payout'],
           'vest' => ['$sum' => '$vesting_payout']
         ]
       ],
@@ -647,7 +617,6 @@ class ApiController extends ControllerBase
     ])->toArray();
     echo json_encode($rewards, JSON_PRETTY_PRINT);
   }
-
   public function curationAction() {
     $rewards = CurationReward::agg([
       [
@@ -680,7 +649,6 @@ class ApiController extends ControllerBase
     ])->toArray();
     echo json_encode($rewards, JSON_PRETTY_PRINT);
   }
-
   public function powerdown1000Action() {
     $accounts = Account::agg([
       ['$sort' => [
@@ -696,5 +664,4 @@ class ApiController extends ControllerBase
     }
     echo $count . " / 1000"; exit;
   }
-
 }

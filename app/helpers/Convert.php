@@ -1,19 +1,14 @@
 <?php
 namespace BexNetwork\Helpers;
-
 use Phalcon\Tag;
-
 class Convert extends Tag
 {
-
   static private function getCache() {
     return static::getDI()->getShared('memcached');
   }
-
   static private function getProps() {
     return static::getDI()->getShared('dpayd')->getProps();
   }
-
   static public function getConversionRate($key) {
     $cache = static::getCache();
     $cached = $cache->get($key);
@@ -28,8 +23,7 @@ class Convert extends Tag
     }
     return $cached;
   }
-
-  static public function vest2bp($value, $label = ' BP', $round = 3)
+  static public function vest2bp($value, $label = ' VP', $round = 3)
   {
     $values = static::getConversionRate('convert_vest2bp');
     $return = $values['total_vest_dpay'] * ($value / $values['total_vests']);
@@ -38,8 +32,7 @@ class Convert extends Tag
     }
     return number_format($return, $round, '.', ',') . $label;
   }
-
-  static public function bp2vest($value, $label = ' VEST')
+  static public function sp2vest($value, $label = ' VEST')
   {
     $values = static::getConversionRate('convert_vest2bp');
     return number_format((($value * 1000) / $values['total_vest_dpay']) * $values['total_vests'], 3, '.', ',') . $label;
